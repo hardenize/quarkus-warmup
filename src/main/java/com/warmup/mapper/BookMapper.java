@@ -4,16 +4,19 @@ import com.google.common.collect.Lists;
 import com.warmup.domain.Author;
 import com.warmup.domain.Book;
 import com.warmup.domain.Editor;
+import com.warmup.domain.Review;
 import com.warmup.domain.Reviewer;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -107,7 +110,7 @@ public interface BookMapper {
     default List<Integer> insertAuthors(Iterable<Author> authors) {
         List<Integer> ids = Lists.newArrayList();
         for (Author author : authors) {
-             ids.add(insertAuthor(author));
+            ids.add(insertAuthor(author));
         }
         return ids;
     }
@@ -154,6 +157,12 @@ public interface BookMapper {
 
     // ---------------------------------- SELECT STATEMENTS --------------------------------------------
 
+    @Select("SELECT EXISTS (SELECT 1 FROM books B WHERE B.isbn = #{isbn})")
+    boolean exists(Book book);
+
+    @Select("SELECT EXISTS (SELECT 1 FROM books B WHERE B.isbn = #{isbn})")
+    boolean existsByIsbn(String isbn);
+
     @Select("""
             SELECT * FROM books WHERE isbn = #{isbn}
             """)
@@ -164,9 +173,10 @@ public interface BookMapper {
             @Result(property = "genre", column = "genre"),
             @Result(property = "publisher", column = "publisher"),
             @Result(property = "publishedOn", column = "published_on"),
-            @Result(property = "editors",   column = "isbn", one = @One(select = "selectEditorsById")),
+            @Result(property = "editors", column = "isbn", one = @One(select = "selectEditorsById")),
             @Result(property = "reviewers", column = "isbn", one = @One(select = "selectReviewersById")),
-            @Result(property = "authors",   column = "isbn", one = @One(select = "selectAuthorsById"))
+            @Result(property = "authors", column = "isbn", one = @One(select = "selectAuthorsById")),
+            @Result(property = "reviews", column = "isbn", many = @Many(select = "selectReviewsById"))
     })
     Book selectById(@Param("isbn") String isbn);
 
@@ -175,33 +185,65 @@ public interface BookMapper {
     List<Book> selectAll();
 
     @Select("""
-            SELECT * FROM people p
-                INNER JOIN people_books pb
-                    ON p.person_id = pb.person_id
-                WHERE pb.book_id = #{isbn} and p.person_type = 'author'
-           """)
-    @Results(id="personMap", value = {
+             SELECT * FROM people p
+                 INNER JOIN people_books pb
+                     ON p.person_id = pb.person_id
+                 WHERE pb.book_id = #{isbn} and p.person_type = 'author'
+            """)
+    @Results(id = "personMap", value = {
             @Result(property = "personId", column = "person_id"),
             @Result(property = "firstName", column = "first_name"),
             @Result(property = "lastName", column = "last_name")
-    })
+            }
+    )
     List<Author> selectAuthorsById(@Param("isbn") String isbn);
 
     @Select("""
-            SELECT * FROM people p
-                INNER JOIN people_books pb
-                    ON p.person_id = pb.person_id
-                WHERE pb.book_id = #{isbn} and p.person_type = 'reviewer'
-           """)
+             SELECT * FROM people p
+                 INNER JOIN people_books pb
+                     ON p.person_id = pb.person_id
+                 WHERE pb.book_id = #{isbn} and p.person_type = 'reviewer'
+            """)
     @ResultMap("personMap")
     List<Reviewer> selectReviewersById(@Param("isbn") String isbn);
 
     @Select("""
-            SELECT * FROM people p
-                INNER JOIN people_books pb
-                    ON p.person_id = pb.person_id
-                WHERE pb.book_id = #{isbn} and p.person_type = 'editor'
-           """)
+             SELECT * FROM people p
+                 INNER JOIN people_books pb
+                     ON p.person_id = pb.person_id
+                 WHERE pb.book_id = #{isbn} and p.person_type = 'editor'
+            """)
     @ResultMap("personMap")
     List<Editor> selectEditorsById(@Param("isbn") String isbn);
+
+    @Select("""
+             SELECT * FROM reviews r
+                 INNER JOIN books b
+                     ON r.ISBN = b.isbn
+            """)
+    @Results(id = "reviewsMap", value = {
+            @Result(property = "reviewId", column = "review_id"),
+            @Result(property = "isbn", column = "isbn"),
+            @Result(property = "comment", column = "comment"),
+            @Result(property = "rating", column = "rating")
+    })
+    List<Review> selectReviewsById(@Param("isbn") String isbn);
+
+    // ----------------------------------  DELETE STATEMENTS --------------------------------------------
+    @Delete("DELETE FROM books B WHERE B.isbn = #{isbn}")
+    void deleteById(String isbn);
+
+    @Delete("DELETE FROM people_books PB WHERE PB.book_id = #{isbn}")
+    void deletePeopleByBookId(@Param("isbn") String isbn);
+
+    // ---------------------------------- UPDATE STATEMENTS ---------------------------------------------
+    @Update("""
+                    UPDATE books B SET title = #{title},
+                                    rating = #{rating},
+                                    genre = #{genre},
+                                    publisher = #{publisher},
+                                    published_on = #{publishedOn}
+                    WHERE B.isbn = #{isbn}
+            """)
+    void update(Book book);
 }

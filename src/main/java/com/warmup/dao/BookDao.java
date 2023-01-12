@@ -10,5 +10,12 @@ public interface BookDao {
 
     Book findById(String id);
 
+    boolean exists(String isbn);
+
     Book save(Book book);
+
+    void update(Book book);
+
+    void deleteById(String isbn);
+
 }

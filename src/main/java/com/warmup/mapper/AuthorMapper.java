@@ -1,17 +1,22 @@
 package com.warmup.mapper;
 
 import com.warmup.domain.Author;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
 @Mapper
 public interface AuthorMapper {
+
+    @Select("SELECT EXISTS (SELECT 1 FROM people P WHERE P.person_id = #{id})")
+    boolean existsById(Integer id);
 
     @Select("SELECT * FROM people p WHERE p.person_type='author'")
     @Results(id="authorMap", value = {
@@ -46,4 +51,18 @@ public interface AuthorMapper {
             RETURNING person_id
             """)
     int insertAuthor(Author author);
+
+    @Update("""
+            UPDATE people
+                SET first_name = #{firstName},
+                    last_name  = #{lastName}
+            WHERE person_id = #{personId}
+            """)
+    int updateAuthor(Author author);
+
+    @Delete("""
+            DELETE FROM people_books pb
+            WHERE pb.person_id = #{id} AND pb.book_id = #{isbn}
+          """)
+    void deleteForBookByAuthorId(@Param("isbn") String isbn, @Param("id") Integer id);
 }

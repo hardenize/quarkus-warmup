@@ -14,6 +14,11 @@ public class AuthorDaoImpl implements AuthorDao {
     private final AuthorMapper authorMapper;
 
     @Override
+    public boolean exists(Integer id) {
+        return authorMapper.existsById(id);
+    }
+
+    @Override
     public List<Author> findAll() {
         return authorMapper.selectAll();
     }
@@ -30,8 +35,17 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public int save(Author author) {
-        int id = authorMapper.insertAuthor(author);
-        System.out.println("Id author=" + id);
-        return id;
+        return authorMapper.insertAuthor(author);
     }
+
+    @Override
+    public void update(Author author) {
+        authorMapper.updateAuthor(author);
+    }
+
+    @Override
+    public void deleteForBookByAuthorId(String isbn, Integer authorId) {
+        authorMapper.deleteForBookByAuthorId(isbn, authorId);
+    }
+
 }

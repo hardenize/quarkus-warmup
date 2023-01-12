@@ -14,6 +14,10 @@ public class ReviewDaoImpl implements ReviewDao {
     private final ReviewMapper reviewMapper;
 
     @Override
+    public boolean exists(Integer id) {
+        return reviewMapper.existsById(id);
+    }
+    @Override
     public List<Review> findAll() {
         return reviewMapper.selectAll();
     }
@@ -22,4 +26,26 @@ public class ReviewDaoImpl implements ReviewDao {
     public Review findById(Integer id) {
         return reviewMapper.selectById(id);
     }
+
+    @Override
+    public int save(Review review) {
+        return reviewMapper.insert(review);
+    }
+
+    @Override
+    public void update(Review review) {
+        reviewMapper.update(review);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        reviewMapper.deleteById(id);
+    }
+
+    @Override
+    public void deleteForBook(String isbn) {
+        reviewMapper.deleteForBook(isbn);
+    }
+
+
 }

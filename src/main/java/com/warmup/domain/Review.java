@@ -11,10 +11,13 @@ import lombok.ToString;
 public class Review {
 
     @Getter
-    private final Integer personId;
+    private final Integer reviewId;
 
     @Getter
     private final String isbn;
+
+    @Getter
+    private final String comment;
 
     @Getter
     private final int rating;
