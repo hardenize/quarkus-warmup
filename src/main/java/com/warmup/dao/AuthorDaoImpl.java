@@ -1,11 +1,15 @@
 package com.warmup.dao;
 
 import com.warmup.domain.Author;
+import com.warmup.domain.Person;
 import com.warmup.mapper.AuthorMapper;
 import lombok.RequiredArgsConstructor;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @RequiredArgsConstructor
 @ApplicationScoped
@@ -21,6 +25,12 @@ public class AuthorDaoImpl implements AuthorDao {
     @Override
     public List<Author> findAll() {
         return authorMapper.selectAll();
+    }
+
+    @Override
+    public Map<String, List<Person>> findAllGrouped() {
+        return authorMapper.selectAllByType().stream()
+                .collect(groupingBy(p -> p.getClass().getSimpleName()));
     }
 
     @Override

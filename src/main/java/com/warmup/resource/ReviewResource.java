@@ -1,6 +1,7 @@
 package com.warmup.resource;
 
 import com.oracle.svm.core.annotate.Delete;
+import com.warmup.dao.BookDao;
 import com.warmup.dao.ReviewDao;
 import com.warmup.domain.Review;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.UriBuilder;
 public class ReviewResource {
 
     private final ReviewDao reviewDao;
+    private final BookDao bookdao;
 
     @GET
     public Response list() {
@@ -32,6 +34,11 @@ public class ReviewResource {
 
     @POST
     public Response save(Review review) {
+        if (!bookdao.exists(review.getIsbn())) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Book not found")
+                    .build();
+        }
         int id = reviewDao.save(review);
         return Response.created(UriBuilder.fromPath("reviews/{id}").build(id)).build();
     }

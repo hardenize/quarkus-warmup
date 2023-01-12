@@ -102,12 +102,18 @@ public interface BookMapper {
     int insertPersonForBook(@Param("personId") Integer personId, @Param("isbn") String isbn);
 
     default void insertBooks(Iterable<Book> books) {
+        if (books == null) {
+            return;
+        }
         for (Book book : books) {
             insert(book);
         }
     }
 
     default List<Integer> insertAuthors(Iterable<Author> authors) {
+        if (authors == null) {
+            return Lists.newArrayList();
+        }
         List<Integer> ids = Lists.newArrayList();
         for (Author author : authors) {
             ids.add(insertAuthor(author));
@@ -116,6 +122,9 @@ public interface BookMapper {
     }
 
     default List<Integer> insertEditors(Iterable<Editor> editors) {
+        if (editors == null) {
+            return Lists.newArrayList();
+        }
         List<Integer> ids = Lists.newArrayList();
         for (Editor editor : editors) {
             ids.add(insertEditor(editor));
@@ -124,6 +133,9 @@ public interface BookMapper {
     }
 
     default List<Integer> insertReviewers(Iterable<Reviewer> reviewers) {
+        if (reviewers == null) {
+            return Lists.newArrayList();
+        }
         List<Integer> ids = Lists.newArrayList();
         for (Reviewer reviewer : reviewers) {
             ids.add(insertReviewer(reviewer));
@@ -132,6 +144,9 @@ public interface BookMapper {
     }
 
     default int insertAuthorsForBook(Iterable<Integer> authorIds, String isbn) {
+        if (authorIds == null) {
+            return 0;
+        }
         int inserted = 0;
         for (Integer authorId : authorIds) {
             inserted += insertPersonForBook(authorId, isbn);
@@ -140,6 +155,10 @@ public interface BookMapper {
     }
 
     default int insertEditorsForBook(Iterable<Integer> editorIds, String isbn) {
+        if (editorIds == null) {
+            return 0;
+        }
+
         int inserted = 0;
         for (Integer editorId : editorIds) {
             inserted += insertPersonForBook(editorId, isbn);
@@ -148,6 +167,9 @@ public interface BookMapper {
     }
 
     default int insertReviewersForBook(Iterable<Integer> reviewerIds, String isbn) {
+        if (reviewerIds == null) {
+            return 0;
+        }
         int inserted = 0;
         for (Integer reviewerId : reviewerIds) {
             inserted += insertPersonForBook(reviewerId, isbn);

@@ -1,14 +1,18 @@
 package com.warmup.dao;
 
 import com.warmup.domain.Author;
+import com.warmup.domain.Person;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AuthorDao {
 
     boolean exists(Integer id);
 
     List<Author> findAll();
+
+    Map<String, List<Person>> findAllGrouped();
 
     Author findById(Integer id);
 

@@ -35,6 +35,32 @@
 					"response": []
 				},
 				{
+					"name": "List all authors grouped by person type",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/authors/grouped",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authors",
+								"grouped"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Query by first name and last name Copy",
 					"request": {
 						"method": "GET",
@@ -70,7 +96,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/authors/101",
+							"raw": "http://localhost:8080/authors/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -78,7 +104,7 @@
 							"port": "8080",
 							"path": [
 								"authors",
-								"101"
+								"1"
 							]
 						}
 					},
@@ -101,7 +127,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\":\"Vlatko\",\n    \"lastName\":\"Dimov\" \n}",
+							"raw": "{\n    \"firstName\":\"Michael\",\n    \"lastName\":\"T. Nygard\" \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -139,7 +165,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"person_id\": 28,\n    \"firstName\": \"Vlatko\",\n    \"lastName\": \"Dimov\"\n}",
+							"raw": "{\n    \"person_id\": 28,\n    \"firstName\": \"Alex\",\n    \"lastName\": \"Petrov\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -223,7 +249,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/books/9781907117091",
+							"raw": "http://localhost:8080/books/9781617296024",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -231,7 +257,7 @@
 							"port": "8080",
 							"path": [
 								"books",
-								"9781907117091"
+								"9781617296024"
 							]
 						}
 					},
@@ -254,7 +280,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"isbn\":\"9185214076819\",\n    \"title\":\"Designing Data Intensive Applications\",\n    \"rating\":5,\n    \"genre\":\"Computer Science\",\n    \"publisher\":\"Oreilly\",\n    \"publishedOn\":\"208-01-10\",\n    \"authors\":[\n        {\n        \"firstName\":\"Martin\",\n        \"lastName\":\"Kleppman\"\n        }\n    ],\n    \"editors\":[\n        {\n        \"firstName\":\"Some\",\n        \"lastName\":\"Editor\"\n        }\n    ],\n    \"reviewers\":[\n        {\n        \"firstName\":\"Some\",\n        \"lastName\":\"Reviewer\"\n        }\n    ],\n    \"reviews\" : [\n        {\n            \"isbn\" : \"9185214076819\",\n            \"comment\" : \"Great book\",\n            \"rating\": 5\n        }\n    ]\n    \n}",
+							"raw": "{\n    \"isbn\":\"9185214476819\",\n    \"title\":\"Designing Data Intensive Applications\",\n    \"rating\":5,\n    \"genre\":\"Computer Science\",\n    \"publisher\":\"Oreilly\",\n    \"publishedOn\":\"208-01-10\",\n    \"authors\":[\n        {\n        \"firstName\":\"Martin\",\n        \"lastName\":\"Kleppman\"\n        }\n    ],\n    \"editors\":[\n        {\n        \"firstName\":\"Some\",\n        \"lastName\":\"Editor\"\n        }\n    ],\n    \"reviewers\":[\n        {\n        \"firstName\":\"Some\",\n        \"lastName\":\"Reviewer\"\n        }\n    ],\n    \"reviews\" : [\n        {\n            \"isbn\" : \"9185214076819\",\n            \"comment\" : \"Great book\",\n            \"rating\": 5\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -319,7 +345,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/books/9781907117091/1",
+							"raw": "http://localhost:8080/books/9781617298936",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -327,8 +353,7 @@
 							"port": "8080",
 							"path": [
 								"books",
-								"9781907117091",
-								"1"
+								"9781617298936"
 							]
 						}
 					},
@@ -381,7 +406,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"isbn\" : \"9781907117091\",\n    \"comment\" : \"Good book\",\n    \"rating\" : 5 \n}",
+							"raw": "{\n    \"isbn\" : \"9781617296024\",\n    \"comment\" : \"Good book\",\n    \"rating\" : 5 \n}",
 							"options": {
 								"raw": {
 									"language": "json"

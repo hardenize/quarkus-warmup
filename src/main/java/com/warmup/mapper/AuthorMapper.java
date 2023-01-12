@@ -1,6 +1,10 @@
 package com.warmup.mapper;
 
 import com.warmup.domain.Author;
+import com.warmup.domain.Editor;
+import com.warmup.domain.Person;
+import com.warmup.domain.Reviewer;
+import org.apache.ibatis.annotations.Case;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,6 +12,7 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -29,6 +34,39 @@ public interface AuthorMapper {
     @Select("SELECT * FROM people p WHERE p.person_id = #{id}")
     @ResultMap("authorMap")
     Author selectById(@Param("id") Integer id);
+
+    @Select("""
+             SELECT * FROM people p
+         """)
+    @TypeDiscriminator(column = "person_type",
+            cases = {
+                    @Case(value = "author", type = Author.class,
+                            results = {
+                                    @Result(property = "personId", column = "person_id"),
+                                    @Result(property = "firstName", column = "first_name"),
+                                    @Result(property = "lastName", column = "last_name"),
+                                    @Result(property = "personType", column = "person_type")
+                            }
+                    ),
+                    @Case(value = "editor", type = Editor.class,
+                            results = {
+                                    @Result(property = "personId", column = "person_id"),
+                                    @Result(property = "firstName", column = "first_name"),
+                                    @Result(property = "lastName", column = "last_name"),
+                                    @Result(property = "personType", column = "person_type")
+                            }
+                    ),
+                    @Case(value = "reviewer", type = Reviewer.class,
+                            results = {
+                                    @Result(property = "personId", column = "person_id"),
+                                    @Result(property = "firstName", column = "first_name"),
+                                    @Result(property = "lastName", column = "last_name"),
+                                    @Result(property = "personType", column = "person_type")
+                            }
+                    )
+            }
+    )
+    List<Person> selectAllByType();
 
     @Select(""" 
             SELECT * FROM people p

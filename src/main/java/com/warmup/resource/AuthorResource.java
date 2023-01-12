@@ -28,6 +28,12 @@ public class AuthorResource {
     }
 
     @GET
+    @Path("/grouped")
+    public Response listGrouped() {
+        return Response.ok(authorDao.findAllGrouped()).build();
+    }
+
+    @GET
     @Path("/{id}")
     public Response get(@PathParam("id") Integer id) {
         return Response.ok(authorDao.findById(id)).build();
